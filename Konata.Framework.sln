@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.32804.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konata.Framework", "Konata.Framework\Konata.Framework.csproj", "{06FF5ECE-015A-47D7-9A61-8816C97C0609}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konata.Framework.Sdk", "Konata.Framework.Sdk\Konata.Framework.Sdk.csproj", "{5F13E82A-EA00-4B1D-8195-F9E1BF66D383}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konata.Core", "Konata.Core\Konata.Core\Konata.Core.csproj", "{AAEF8316-2258-4C46-8BD3-C86740C2A67B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Konata.Framework.CLI", "Konata.Framework.CLI\Konata.Framework.CLI.csproj", "{C96C8DA9-9D79-471C-ABC3-F304C88DCAA1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{51F7E002-BC15-4F97-B7C0-AB54623A796E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleExtension", "SimpleExtension\SimpleExtension.csproj", "{CE0B4FF7-515F-4DA9-9002-31C0DF3C4CA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06FF5ECE-015A-47D7-9A61-8816C97C0609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06FF5ECE-015A-47D7-9A61-8816C97C0609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06FF5ECE-015A-47D7-9A61-8816C97C0609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06FF5ECE-015A-47D7-9A61-8816C97C0609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F13E82A-EA00-4B1D-8195-F9E1BF66D383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F13E82A-EA00-4B1D-8195-F9E1BF66D383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F13E82A-EA00-4B1D-8195-F9E1BF66D383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F13E82A-EA00-4B1D-8195-F9E1BF66D383}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAEF8316-2258-4C46-8BD3-C86740C2A67B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAEF8316-2258-4C46-8BD3-C86740C2A67B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAEF8316-2258-4C46-8BD3-C86740C2A67B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAEF8316-2258-4C46-8BD3-C86740C2A67B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C96C8DA9-9D79-471C-ABC3-F304C88DCAA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C96C8DA9-9D79-471C-ABC3-F304C88DCAA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C96C8DA9-9D79-471C-ABC3-F304C88DCAA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C96C8DA9-9D79-471C-ABC3-F304C88DCAA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE0B4FF7-515F-4DA9-9002-31C0DF3C4CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE0B4FF7-515F-4DA9-9002-31C0DF3C4CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE0B4FF7-515F-4DA9-9002-31C0DF3C4CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE0B4FF7-515F-4DA9-9002-31C0DF3C4CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE0B4FF7-515F-4DA9-9002-31C0DF3C4CA9} = {51F7E002-BC15-4F97-B7C0-AB54623A796E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EED60ADB-68E1-472E-8EC0-17EFA7A0C771}
+	EndGlobalSection
+EndGlobal

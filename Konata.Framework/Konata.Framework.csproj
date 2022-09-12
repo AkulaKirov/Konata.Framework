@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net70</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0-preview.7.22375.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\Konata.Core\Konata.Core\Konata.Core.csproj">
+	  </ProjectReference>
+    <ProjectReference Include="..\Konata.Framework.Sdk\Konata.Framework.Sdk.csproj" />
+  </ItemGroup>
+
+</Project>
