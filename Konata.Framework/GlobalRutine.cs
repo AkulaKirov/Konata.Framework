@@ -1,23 +1,28 @@
 ﻿using Konata.Framework.Managers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Konata.Framework
 {
     public static class GlobalRutine
     {
-        public static EventManager EventManager { get; private set; } = new();
-        public static ExtensionManager ExtensionManager { get; private set; } = new();
-        public static BotManager BotManager { get; private set; } = new();
+        // TODO: 把 Logger 的实现切到 Microsoft.Extension.Logging
+        public const string EXTENSION_DIR = "extensions";
+        public const string BOT_CONFIG_DIR = "bots";
+        public const string CONFIG_DIR = "configs";
+        public static EventHandlerManager EventHandlerManager
+            => EventHandlerManager.Instance;
+        public static ExtensionManager ExtensionManager
+            => ExtensionManager.Instance;
+        public static BotManager BotManager
+            => BotManager.Instance;
 
-        public static void StartUp()
+
+        public static void Startup()
         {
-            EventManager.Init();
-            ExtensionManager.Init();
+            Console.WriteLine("Initializing BotManager.");
             BotManager.Init();
+            Console.WriteLine("Initializing ExtensionManager.");
+            ExtensionManager.Init();
+            Console.WriteLine("Startup completed.");
         }
     }
 }

@@ -8,8 +8,7 @@ namespace Konata.Framework.CLI
     {
         static void Main(string[] args)
         {
-            GlobalRutine.StartUp();
-            GlobalRutine.BotManager.Login();
+            GlobalRutine.Startup();
         }
     }
 }

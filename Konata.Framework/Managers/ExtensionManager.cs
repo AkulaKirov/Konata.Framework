@@ -1,23 +1,26 @@
 ﻿using Konata.Framework.Extensions;
 using Konata.Framework.Loaders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Konata.Framework.Managers
 {
     public class ExtensionManager
     {
-        public const string EXTENSION_DIR = "extensions";
-        public static DirectoryInfo extensionDir = new(EXTENSION_DIR);
+        private static ExtensionManager instance;
+
+        public static DirectoryInfo extensionDir = new(GlobalRutine.EXTENSION_DIR);
 
         public int ExtensionCount => HostedExtensionTable.Count;
 
         public Dictionary<string, HostedExtension> HostedExtensionTable { get; } = new();
 
-        public ExtensionManager() 
+        public static ExtensionManager Instance
+        {
+            get
+            {
+                return instance ??= new();
+            }
+        }
+        private ExtensionManager()
         {
             if (!extensionDir.Exists)
                 extensionDir.Create();
@@ -47,9 +50,15 @@ namespace Konata.Framework.Managers
         {
             foreach (var extension in HostedExtensionTable)
             {
-                extension.Value.Load();
-                extension.Value.Enable();
-                GlobalRutine.EventManager.RegisterEventListener(extension.Value.ExecuteAsync);
+                Console.WriteLine($"Loading extension: {extension.Value.Name}({extension.Key})");
+                if (extension.Value.Load() && extension.Value.Enable())
+                {
+                    GlobalRutine.EventHandlerManager.RegisterExtensionEventHandlers(extension.Value);
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to load extension: {extension.Value.Name}({extension.Key})");
+                }
             }
         }
         public bool RegisterExtension(HostedExtension hostedExtension)

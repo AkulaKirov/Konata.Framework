@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
+using Konata.Framework.AdaptiveEvent.Extensions;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Konata.Framework.AdaptiveEvent.Extensions;
 
 namespace Konata.Framework.AdaptiveEvent.Utils
 {
@@ -23,7 +17,7 @@ namespace Konata.Framework.AdaptiveEvent.Utils
             return delegateType.GetMethod("Invoke");
         }
 
-        public static T? GenerateDelegate<T>(object instance, MethodInfo method,bool auto_generate_new_instance=false)
+        public static T? GenerateDelegate<T>(object instance, MethodInfo method, bool auto_generate_new_instance = false)
         {
             if (instance != null && method.DeclaringType != instance.GetType())
                 throw new InvalidOperationException($"{method.Name} not in {instance.GetType()}!");
@@ -44,7 +38,7 @@ namespace Konata.Framework.AdaptiveEvent.Utils
 
             // Create call.
             MethodCallExpression methodCall = Expression.Call(
-                instance == null ? (method.IsStatic&&!auto_generate_new_instance ? null: Expression.New(method.DeclaringType)) : Expression.Constant(instance),
+                instance == null ? (method.IsStatic && !auto_generate_new_instance ? null : Expression.New(method.DeclaringType)) : Expression.Constant(instance),
                 method,
                 convertedArguments
                 );
@@ -62,7 +56,7 @@ namespace Konata.Framework.AdaptiveEvent.Utils
                     delegateArguments
                     ).Compile();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return default;
             }

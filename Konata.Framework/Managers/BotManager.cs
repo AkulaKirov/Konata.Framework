@@ -4,24 +4,27 @@ using Konata.Core.Interfaces;
 using Konata.Core.Interfaces.Api;
 using Konata.Framework.Sdk.Events.Messages;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Konata.Framework.Managers
 {
     public class BotManager
     {
-        public const string BOT_CONFIG_DIR = "bots";
-        public static DirectoryInfo botConfigDir = new(BOT_CONFIG_DIR);
+        // TODO: 对 Andreal 进行一个抄
+        private static BotManager instance;
+
+        public static DirectoryInfo botConfigDir = new(GlobalRutine.BOT_CONFIG_DIR);
         public int BotCount => BotTable.Count;
         public Dictionary<uint, Bot> BotTable { get; } = new();
 
-        public BotManager()
+        public static BotManager Instance
+        {
+            get
+            {
+                return instance ??= new();
+            }
+        }
+
+        private BotManager()
         {
             if (!botConfigDir.Exists)
                 botConfigDir.Create();
@@ -54,29 +57,45 @@ namespace Konata.Framework.Managers
             }
         }
 
-        public void Login()
+        private static void UpdateKeystore(uint qqid, BotKeyStore keystore)
         {
-            foreach (var bot in BotTable)
-                Login(bot.Value);
+            var pth = Path.BotConfig(qqid);
+
+            ConfigJson cfg = new() { KeyStore = keystore, Device = BotInfos[qqid].Device };
+
+            File.WriteAllText(pth, JsonConvert.SerializeObject(cfg));
         }
 
-        public void Login(Bot bot)
+        private async void Bot_OnFriendMessage(Bot sender, Core.Events.Model.FriendMessageEvent args)
         {
-            if (!bot.Login().Result) return;
-            Console.WriteLine($"{bot.Uin} Online");
-            bot.OnGroupMessage += Bot_OnGroupMessage;
+            var friend = sender.GetFriendList().Result.First(x => x.Uin == args.FriendUin);
+            FriendMessageEvent friendMessageEvent = new()
+            {
+                Time = args.EventTime,
+                Bot = sender,
+                SubjectUin = args.FriendUin,
+                SenderUin = args.FriendUin,
+                Message = args.Message,
+                Friend = friend,
+            };
+            await GlobalRutine.EventHandlerManager.DispatchEvent(friendMessageEvent);
         }
 
-        private void Bot_OnGroupMessage(Bot sender, Core.Events.Model.GroupMessageEvent args)
+        private async void Bot_OnGroupMessage(Bot sender, Core.Events.Model.GroupMessageEvent args)
         {
-            GlobalRutine.EventManager.DispatchEvent(new MessageEvent()
+            var group = sender.GetGroupList().Result.First(x => x.Uin == args.GroupUin);
+            var member = sender.GetGroupMemberInfo(args.GroupUin, args.MemberUin).Result;
+            GroupMessageEvent groupMessageEvent = new()
             {
                 Time = args.EventTime,
                 Bot = sender,
                 SubjectUin = args.GroupUin,
                 SenderUin = args.MemberUin,
-                Message = args.Message.Chain.ToString()
-            });
+                Message = args.Message,
+                Group = group,
+                Member = member,
+            };
+            await GlobalRutine.EventHandlerManager.DispatchEvent(groupMessageEvent);
         }
     }
 }

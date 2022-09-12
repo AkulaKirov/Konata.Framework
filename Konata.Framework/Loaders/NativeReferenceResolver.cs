@@ -17,7 +17,7 @@ namespace Konata.Framework.Loaders
         private static NativeReferenceResolver instance = new();
         private NativeReferenceResolver()
         {
-            using (HttpClient httpClient = new HttpClient())
+            using (HttpClient httpClient = new HttpClient() { Timeout = new TimeSpan(0, 0, 5) })
             {
                 string runtimeRIDJson;
                 try

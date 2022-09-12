@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Konata.Framework.Sdk.Events
 {
-    public abstract class KonataEvent
+    public abstract class KonataEvent : BaseEvent
     {
         public DateTime Time { get; set; }
         public Bot Bot { get; set; }
+
     }
 }
