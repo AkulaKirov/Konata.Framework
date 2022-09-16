@@ -9,12 +9,17 @@ namespace Konata.Framework.Managers
 {
     public class BotManager
     {
-        // TODO: 对 Andreal 进行一个抄
         private static BotManager instance;
+        private static Bot bot;
 
         public static DirectoryInfo botConfigDir = new(GlobalRutine.BOT_CONFIG_DIR);
-        public int BotCount => BotTable.Count;
-        public Dictionary<uint, Bot> BotTable { get; } = new();
+        public static readonly BotConfig DefaultBotConfig = new()
+        {
+            TryReconnect = true,
+            HighwayChunkSize = 8192,
+            DefaultTimeout = 5000,
+            Protocol = OicqProtocol.Android,
+        };
 
         public static BotManager Instance
         {
@@ -26,46 +31,52 @@ namespace Konata.Framework.Managers
 
         private BotManager()
         {
-            if (!botConfigDir.Exists)
-                botConfigDir.Create();
+            
         }
-
         public void Init()
         {
-            foreach (var dir in botConfigDir.EnumerateDirectories())
+            if (!botConfigDir.Exists)
+                botConfigDir.Create();
+            var configFile = botConfigDir.GetFiles("config.json").FirstOrDefault();
+            var keyStoreFile = botConfigDir.GetFiles("keystore.json").FirstOrDefault();
+            var deviceFile = botConfigDir.GetFiles("device.json").FirstOrDefault();
+            if (keyStoreFile == null) return;
+            else
             {
-                BotKeyStore keyStore;
-                BotDevice device;
-                BotConfig config;
-
-                var keyStoreFile = Path.Combine(dir.FullName, "keystore.json");
-                var deviceFile = Path.Combine(dir.FullName, "device.json");
-                var configFile = Path.Combine(dir.FullName, "config.json");
-
-                if (!File.Exists(keyStoreFile) || !File.Exists(deviceFile))
-                    continue;
-
-                keyStore = JsonConvert.DeserializeObject<BotKeyStore>(File.ReadAllText(keyStoreFile));
-                device = JsonConvert.DeserializeObject<BotDevice>(File.ReadAllText(deviceFile));
-                if (File.Exists(configFile))
-                    config = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(keyStoreFile));
-                else
-                    config = BotConfig.Default();
-
-                Bot bot = BotFather.Create(config, device, keyStore);
-                BotTable.TryAdd(keyStore.Account.Uin, bot);
+                var botConfig = configFile == null ? DefaultBotConfig : JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(configFile.FullName));
+                var botKeyStore = keyStoreFile == null ? throw new Exception() : JsonConvert.DeserializeObject<BotKeyStore>(File.ReadAllText(keyStoreFile.FullName));
+                var botDevice = deviceFile == null ? new BotDevice() : JsonConvert.DeserializeObject<BotDevice>(File.ReadAllText(deviceFile.FullName));
+                AddBot(botKeyStore, botDevice, botConfig);
             }
         }
-
-        private static void UpdateKeystore(uint qqid, BotKeyStore keystore)
+        public void AddBot(string uin, string password)
         {
-            var pth = Path.BotConfig(qqid);
-
-            ConfigJson cfg = new() { KeyStore = keystore, Device = BotInfos[qqid].Device };
-
-            File.WriteAllText(pth, JsonConvert.SerializeObject(cfg));
+            BotKeyStore botKeyStore = new BotKeyStore(uin, password);
+            AddBot(botKeyStore, null, null);
         }
+        public void AddBot(BotKeyStore botKeyStore, BotDevice? botDevice, BotConfig? botConfig = null)
+        {
+            if (botKeyStore == null)
+                throw new ArgumentNullException(nameof(botKeyStore));
+            if (botDevice == null)
+                botDevice = new BotDevice();
+            if (botConfig == null)
+                botConfig = DefaultBotConfig;
+            bot = BotFather.Create(botConfig, botDevice, botKeyStore);
+        }
+        public void RemoveBot()
+        {
+            bot.Logout();
+            bot.Dispose();
+        }
+        public async Task<bool> Login()
+        {
+            if (bot == null) return false;
+            bot.OnFriendMessage += Bot_OnFriendMessage;
+            bot.OnGroupMessage += Bot_OnGroupMessage;
 
+            return await bot.Login();
+        }
         private async void Bot_OnFriendMessage(Bot sender, Core.Events.Model.FriendMessageEvent args)
         {
             var friend = sender.GetFriendList().Result.First(x => x.Uin == args.FriendUin);

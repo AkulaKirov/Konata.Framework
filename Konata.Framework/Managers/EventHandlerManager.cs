@@ -13,9 +13,7 @@ namespace Konata.Framework.Managers
         private Dictionary<Type, object> eventHandlerCache = new Dictionary<Type, object>();
         private Dictionary<Type, SortedList<int, KeyValuePair<string, Func<BaseEvent, Task>>>> eventHandlerDeleagte = new Dictionary<Type, SortedList<int, KeyValuePair<string, Func<BaseEvent, Task>>>>();
 
-
         private EventHandlerManager() { }
-
         public static EventHandlerManager Instance
         {
             get
@@ -23,7 +21,6 @@ namespace Konata.Framework.Managers
                 return instance ??= new();
             }
         }
-
         public void RegisterExtensionEventHandlers(HostedExtension hostedExtension)
         {
             var method_list = new List<MethodInfo>();
@@ -79,8 +76,6 @@ namespace Konata.Framework.Managers
                 }
             }
         }
-
-
         public async Task DispatchEvent<T>(T eventPackage)
             where T : BaseEvent
         {

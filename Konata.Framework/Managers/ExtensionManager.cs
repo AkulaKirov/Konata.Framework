@@ -22,16 +22,15 @@ namespace Konata.Framework.Managers
         }
         private ExtensionManager()
         {
-            if (!extensionDir.Exists)
-                extensionDir.Create();
+            
         }
-
         public void Init()
         {
+            if (!extensionDir.Exists)
+                extensionDir.Create();
             DiscoverExtensions();
             LoadExtensions();
         }
-
         public void DiscoverExtensions()
         {
             foreach (var dir in extensionDir.EnumerateDirectories())
